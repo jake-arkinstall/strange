@@ -17,6 +17,8 @@ namespace strange{
             yield(strange::end{});
         }
     };
+    template<typename T>
+    range(T, T) -> range<T>;
 
     template<auto start, decltype(start) end, decltype(start) step = 1>
     struct unrolled_range{
