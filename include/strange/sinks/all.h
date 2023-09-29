@@ -3,5 +3,7 @@
 
 #include "print.h"
 #include "swallow.h"
+#include "file.h"
+#include "to_vector.h"
 
 #endif

@@ -2,6 +2,7 @@ find_package(Catch2 3 REQUIRED)
 
 add_executable(strange_tests
     range.cpp
+    file.cpp
 )
 
 # Link against your header-only library and Catch2

@@ -62,7 +62,12 @@ int main(){
 }
 ```
 
-The equivalent approach with a normal function call would require a sum type such as std::variant. This involves something I call "double discovery", for lack of a better name.
+The equivalent approach with a normal function call would require a sum type such as std::variant.
+Don't get me wrong - variants are awesome and should absolutely be used when you need to store state
+somewhere long-term. They are inefficient vehicles for returning runtime-determined types, though,
+because you introduce a second branch (I call this "double discovery", for lack of a better name).
+
+Consider the variant approach:
 
 ```cpp
 std::variant<int, double> divide(int a, int b){
@@ -72,20 +77,26 @@ std::variant<int, double> divide(int a, int b){
         return static_cast<double>(a) / b;
     }
 }
+```
 
+This does some runtime check to determine what type to bundle into the variant. When you decide
+to *use* that value, you have to do *another* runtime check:
+
+```cpp
 int main(){
-    auto x = divide(10, 3); // this branches on if(a % b == 0)
-    std::visit(
+    auto x = divide(10, 3); // branches on if(a % b == 0)
+    std::visit(             // branches on the index held in the variant
         [](auto y){ fmt::print("{}\n", y },
-        x); // std::visit branches on the index held in the variant
+        x); 
 }
 ```
 
-If you are simply visiting the result, you end up branching twice - once on the condition that decides which type to return, and one that figures out which type was returned.
-If you need to store the value for later use, variant is fantastic, and you can emulate this with callback passing:
+This makes sense when you're storing the variant somewhere for later, but doing it
+immediately after the creation of the variant seems wasteful. If you want a variant,
+you can pass the variant assignment as the callback:
 
 ```cpp
-void divide(auto%% yield, int a, int b){
+void divide(auto&& yield, int a, int b){
     if(a % b == 0){
         yield(a / b);
     }else{
@@ -98,6 +109,9 @@ void divide_as_variant(int a, int b){
     return result;
 }
 ```
+
+This has no additional overhead compared with the `std::variant<int, double> divide(int, int)` approach,
+and you should expect it to generate identical assembly.
 
 2. You can return more than once.
 
@@ -150,9 +164,12 @@ Because the function doesn't exit on invocation of the callback, you can call it
 have to stick to the same type. This combines points 1 and 2, but is a powerful example to make.
 
 You can construct an [extremely simple message parser](https://godbolt.org/z/hcnoToE6j) using this approach.
+In this scenario, you receive a message that could correspond to zero, one, or more values, each of a different
+type. You are able to parse the message item by item, "yielding" them out to a handler one by one.
 
 The alternative might be along the lines of returning a `std::vector<std::variant<...>>`, or exposing message
-parsing steps to the call site.
+parsing steps to the call site. Another alternative might be to use a coroutine that `co_yield`s a std::variant.
+
 
 4. Lifetimes are easier to work with
 
@@ -189,4 +206,3 @@ int main(){
     );
 }
 ```
-

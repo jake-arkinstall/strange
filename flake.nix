@@ -9,14 +9,11 @@
     pkgs = import nixpkgs { inherit system; };
   in
     {
-      devShell = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         packages = [ pkgs.cmake pkgs.catch2_3 pkgs.fmt_9 ];
       };
-      packages.default = pkgs.stdenv.mkDerivation {
-        name = "strange";
-        src = ./.;
-        nativeBuildInputs = [ pkgs.cmake ];
-        buildInputs = [ pkgs.catch2_3 pkgs.fmt_9 ];
-      };
-    });
+      packages.default = pkgs.callPackage ./default.nix {};
+      checks.default = pkgs.callPackage ./default.nix { build_tests = true; };
+    }
+  );
 }
