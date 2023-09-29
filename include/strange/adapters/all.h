@@ -6,5 +6,6 @@
 #include "filter.h"
 #include "take.h"
 #include "transform.h"
+#include "transform_invoke.h"
 
 #endif

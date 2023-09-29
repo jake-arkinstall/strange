@@ -35,8 +35,8 @@ namespace strange{
             yield(strange::end{});
         }
 
-        static std::optional<text_file_reader> try_open(std::filesystem::path const& path, bool skip_header = false) noexcept{
-            auto handle = fopen(path.c_str(), "r");
+        static std::optional<text_file_reader> try_open(char const* path, bool skip_header = false) noexcept{
+            auto handle = fopen(path, "r");
             if(!handle){
                 return std::nullopt;
             }
@@ -48,6 +48,10 @@ namespace strange{
             }
             return text_file_reader{handle};
         }
+        static std::optional<text_file_reader> try_open(std::filesystem::path const& path, bool skip_header = false) noexcept{
+            return try_open(path.c_str(), skip_header);
+        }
+
     };
 }
 

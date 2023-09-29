@@ -1,6 +1,8 @@
 #ifndef STRANGE_API_HEADER
 #define STRANGE_API_HEADER
 
+#include <utility>
+
 #define FWD(a) std::forward<decltype(a)>(a)
 
 namespace strange{

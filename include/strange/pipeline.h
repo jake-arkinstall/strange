@@ -1,6 +1,8 @@
 #ifndef STRANGE_PIPELINE_HEADER
 #define STRANGE_PIPELINE_HEADER
 
+#include <type_traits>
+
 #include "strange/core.h"
 
 namespace strange{

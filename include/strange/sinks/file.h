@@ -34,12 +34,15 @@ namespace strange{
             yield(line);
         }
 
-        static std::optional<text_file_writer> try_open(std::filesystem::path const& path, bool append = false) noexcept{
-            auto handle = fopen(path.c_str(), append ? "w+" : "w");
+        static std::optional<text_file_writer> try_open(char const* path, bool append = false) noexcept{
+            auto handle = fopen(path, append ? "w+" : "w");
             if(!handle){
                 return std::nullopt;
             }
             return text_file_writer{handle};
+        }
+        static std::optional<text_file_writer> try_open(std::filesystem::path const& path, bool append = false) noexcept{
+            return try_open(path.c_str(), append);
         }
     };
 }
