@@ -149,8 +149,7 @@ std::vector<int> range_vector(int start, int stop, int step){
 Because the function doesn't exit on invocation of the callback, you can call it multiple times, and you don't
 have to stick to the same type. This combines points 1 and 2, but is a powerful example to make.
 
-You can construct an extremely simple message parser using this approach.
-[https://godbolt.org/z/hcnoToE6j](here's a simple example).
+You can construct an [extremely simple message parser](https://godbolt.org/z/hcnoToE6j) using this approach.
 
 The alternative might be along the lines of returning a `std::vector<std::variant<...>>`, or exposing message
 parsing steps to the call site.
