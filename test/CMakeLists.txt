@@ -1,9 +1,9 @@
 find_package(Catch2 3 REQUIRED)
 
-add_executable(strange_tests
-    range.cpp
-    file.cpp
-)
+file(GLOB_RECURSE strange_tests_sources
+     CONFIGURE_DEPENDS "*.cpp")
+
+add_executable(strange_tests ${strange_tests_sources})
 
 # Link against your header-only library and Catch2
 target_link_libraries(strange_tests PRIVATE strange)

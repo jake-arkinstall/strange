@@ -11,6 +11,16 @@ namespace strange{
         void operator()(strange::sink, auto&& value) const noexcept{
             fmt::print("- {}\n", value);
         }
+        void operator()(auto&& yield, strange::begin x) const noexcept{
+            yield(x);
+        }
+        void operator()(auto&& yield, strange::end x) const noexcept{
+            yield(x);
+        }
+        void operator()(auto&& yield, auto&& value) const noexcept{
+            fmt::print("- {}\n", value);
+            yield(value);
+        }
     };
 }
 
